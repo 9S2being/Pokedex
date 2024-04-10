@@ -14,8 +14,8 @@ import {
 // Componente da página geral
 export function PokemonPage() {
     return (
-        <>
             <Grid style={{ backgroundColor: '#727272', border: "4px solid black", borderRadius: '4px' }}>
+                {/*Aqui vai a Header*/}
                 <Container style={{backgroundColor: '#FFFFFFFF'}}>
                     <Grid>
                         <PokemonList1 />
@@ -29,7 +29,7 @@ export function PokemonPage() {
                         <PokemonList9 />  
                     </Grid>
                 </Container>
+                 {/*Aqui vai o Footer*/}
             </Grid >
-        </>
     );
 }
