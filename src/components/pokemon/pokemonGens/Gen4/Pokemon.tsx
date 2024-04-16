@@ -7,6 +7,8 @@ import { getTypeColor } from "../../molding/elements/Elements";
 import { groupLimit } from "../../molding/group/Group";
 import { formatId } from "../../molding/id/Id";
 import { Link } from "react-router-dom";
+import { PokeNav } from "../../../header/NavPokedex";
+import { Header } from "../../../header/Header";
 
 export function PokemonList4() {
     const [pokemon, setPokemon] = useState<PokemonResponse[]>([]);
@@ -32,15 +34,15 @@ export function PokemonList4() {
         fetchPokemonList();
     }, []); 
 
-    // Dividi os Pokémon em grupos de 8
     const pokemonGroups = groupLimit(pokemon, 7);
-
-    //El Conteudo
    
     return (
-        <Box style={{ backgroundColor: '#727272' }}>
+        <Box style={{ backgroundColor: '#727272'}}>
+            <Header />
         <Container style={{backgroundColor: '#FFFFFFFF'}}>
+        
             <Box style={{ padding: '5px 10px ' }}>
+            <PokeNav />
                 <Box mt={4} mb={4}>
                     <Typography style={{ fontSize: '30px', fontWeight: 'bold', borderBottom: '2px solid black' }}>
                         Generation 4 Pokémon
@@ -57,7 +59,8 @@ export function PokemonList4() {
                                 <Typography style={{ fontSize: '11px' }}>{formatId(pokemon.id)}</Typography>
                                 <Typography style={{ fontSize: '13px' }}>{pokemon.height * 10} cm</Typography>
                                 <Grid>
-                                    <Link style={{ color: '#2769be', textDecoration: 'none' }} to={""}>
+                                   
+                                    <Link to={`/pokemon/${pokemon.name}`} style={{ color: '#2769be', textDecoration: 'none' }}>
                                         {pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}
                                     </Link>
                                 </Grid>

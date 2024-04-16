@@ -8,6 +8,8 @@ import { getTypeColor } from "../../molding/elements/Elements";
 import { groupLimit } from "../../molding/group/Group";
 import { formatId } from "../../molding/id/Id";
 import { Link } from "react-router-dom";
+import { Header } from "../../../header/Header";
+import { PokeNav } from "../../../header/NavPokedex";
 
 export function PokemonList2() {
     const [pokemon, setPokemon] = useState<PokemonResponse[]>([]);
@@ -38,9 +40,11 @@ export function PokemonList2() {
 
     return (
         <Box style={{ backgroundColor: '#727272'}}>
+            <Header />
         <Container style={{backgroundColor: '#FFFFFFFF'}}>
+        
             <Box style={{ padding: '5px 10px ' }}>
-                
+            <PokeNav />
                 <Box mt={4} mb={4}>
                     <Typography style={{ fontSize: '30px', fontWeight: 'bold', borderBottom: '2px solid black' }}>
                         Generation 2 Pokémon

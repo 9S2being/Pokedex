@@ -6,7 +6,7 @@ function App() {
     <>
    <GlobalStyle />
    <RouterApp  />
-   <GlobalStyle />
+   
    </>
   )
 }

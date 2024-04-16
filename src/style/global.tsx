@@ -6,6 +6,7 @@ const GlobalStyle = createGlobalStyle`
     font-family: 'Roboto', sans-serif;
     margin: 0;
     padding: 0;
+    height: 100vh;
     backgroundColor: "#727272",
     borderRadius: "4px",
     color: #333;

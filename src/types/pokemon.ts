@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
- interface PokemonType {
+interface PokemonType {
     slot: number;
     type: {
         name: string;
@@ -7,10 +7,25 @@
     };
 }
 
- interface Sprite {
+interface Sprite {
     front_default: string;
 }
 
+interface Item {
+    name: string;
+    category: string;
+    effect: string;
+
+}
+
+interface Moves {
+    name: string;
+    pp: number;
+    power: number;
+    accuracy: number;
+}
+
+//Pokemon
 export interface PokemonResponse {
     id: number;
     name: string;
@@ -19,36 +34,26 @@ export interface PokemonResponse {
     types: PokemonType[];
     sprites: Sprite;
     description: string;
-    abilities: string;
     stats: number;
 }
 
+//Pokemons
 export interface PokedexDTO {
     pokemon: PokemonResponse[];
 }
 
+//group
 export interface GroupLimit {
     limit: number;
 }
 
-interface Item {
-    name: string;
-}
-
-interface Moves {
-    name: string;
-    description: string;
-    power: number;
-    accuracy: number;
-
-}
+//Moves
 export interface MovesDTO {
     moves: Moves[];
 }
 
-
+//Items
 export interface ItemDTO {
     item: Item[];
 }
-  
-  
+

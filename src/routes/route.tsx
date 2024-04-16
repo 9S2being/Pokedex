@@ -1,15 +1,16 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { PokedexPage } from '../pages/NationalDex/NationalPokedex';
 import {
   PokemonList1, PokemonList2, PokemonList3, PokemonList4, PokemonList5,
   PokemonList6, PokemonList7, PokemonList8, PokemonList9
 } from '../components/pokemon/index';
-import { PokemonPage } from '../pages/pokemonPage/PokemonPage';
+import { PokemonPage } from '../pages/pokemonPage/Pokemon';
 import { FavoritePage } from '../pages/favoritesPage/FavoritesPage';
 import { ItemsPage } from '../pages/itemsPage/Items';
 import { MovesPage } from '../pages/movesPage/MovesPage';
+import { WelcomePage } from '../pages/WelcomePage/Pokedex';
+
 const routerConfig = [
-  { path: '/', element: <PokedexPage /> },
+  { path: '/', element: <WelcomePage /> },
   { path: '/PokedexGen1', element: <PokemonList1 /> },
   { path: '/PokedexGen2', element: <PokemonList2 /> },
   { path: '/PokedexGen3', element: <PokemonList3 /> },

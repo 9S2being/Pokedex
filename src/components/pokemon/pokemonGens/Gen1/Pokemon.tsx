@@ -1,11 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState, useEffect, Key } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { Box, Typography, Grid, Container } from "@mui/material";
 import { groupLimit } from "../../molding/group/Group";
 import { formatId } from "../../molding/id/Id";
 import { getTypeColor } from "../../molding/elements/Elements";
+import { Header } from "../../../header/Header";
+import { PokeNav } from "../../../header/NavPokedex";
+import { PokemonResponse } from "../../../../types/pokemon";
 
 export function PokemonList1() {
   const [pokemon, setPokemon] = useState([] as any[]);
@@ -39,51 +42,53 @@ export function PokemonList1() {
   const pokemonGroups = groupLimit(pokemon, 7);
 
   return (
-    <Box style={{ backgroundColor: '#727272' }}>
-      <Container style={{ backgroundColor: '#FFFFFFFF' }}>
-        <Box style={{ padding: '5px 10px ' }}>
-          <Box mt={4} mb={4}>
+    <>
+    <Header />
+    <Box style={{ backgroundColor: '#727272'}}>
+    
+<Container style={{backgroundColor: '#FFFFFFFF'}}>
+    <Box style={{ padding: '5px 10px ' }}>
+    <PokeNav />
+        <Box mt={4} mb={4}>
             <Typography style={{ fontSize: '30px', fontWeight: 'bold', borderBottom: '2px solid black' }}>
-              Generation 1 Pokémon
+                Generation 1 Pokémon
             </Typography>
-          </Box>
-
-          {pokemonGroups.map((group, index) => (
-            <Box key={index} display="flex" justifyContent="center" flexWrap="wrap">
-              {group.map((pokemon, subIndex) => (
-                <Box key={subIndex} m={2} textAlign="center">
-                  {pokemon.sprites && (
-                    <img
-                      src={pokemon.sprites.front_default}
-                      alt={pokemon.name}
-                      style={{ height: "105px" }}
-                    />
-                  )}
-                  <Typography style={{ fontSize: '11px' }}>{formatId(pokemon.id)}</Typography>
-                  <Typography style={{ fontSize: '13px' }}>{pokemon.height * 10} cm</Typography>
-                  <Grid>
-                    <Link to={`/pokemon/${pokemon.name}`} style={{ color: '#2769be', textDecoration: 'none' }}>
-                      {pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}
-                    </Link>
-                  </Grid>
-                  <Grid>
-                    <Typography>
-                      {pokemon.types.map((type: { type: { name: string; }; }, typeIndex: Key | null | undefined) => (
-                        <span key={typeIndex}>
-                          <span style={{ fontSize: '15px', color: getTypeColor(type.type.name.charAt(0).toUpperCase() + type.type.name.slice(1)) }}>
-                            {type.type.name.charAt(0).toUpperCase() + type.type.name.slice(1)}
-                          </span>
-                          {typeof typeIndex === 'number' && typeIndex < pokemon.types.length - 1 && " · "}
-                        </span>
-                      ))}
-                    </Typography>
-                  </Grid>
-                </Box>
-              ))}
-            </Box>
-          ))}
         </Box>
-      </Container>
+
+        {pokemonGroups.map((group, index) => (
+            <Box key={index} display="flex" justifyContent="center" flexWrap="wrap">
+                {group.map((pokemon: PokemonResponse, subIndex: number) => (
+                    <Box key={subIndex} m={2} textAlign="center">
+                        {pokemon.sprites && (
+                            <img src={pokemon.sprites.front_default} alt={pokemon.name} style={{ height: "105px" }} />
+                        )}
+                        <Typography style={{ fontSize: '11px' }}>{formatId(pokemon.id)}</Typography>
+                        <Typography style={{ fontSize: '13px' }}>{pokemon.height * 10} cm</Typography>
+                        <Grid>
+                           
+                            <Link to={`/pokemon/${pokemon.name}`} style={{ color: '#2769be', textDecoration: 'none' }}>
+                                {pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}
+                            </Link>
+                        </Grid>
+                        <Grid>
+                            <Typography>
+                                {pokemon.types.map((type, typeIndex) => (
+                                    <span key={typeIndex}>
+                                        <span style={{ fontSize: '15px', color: getTypeColor(type.type.name.charAt(0).toUpperCase() + type.type.name.slice(1)) }}>
+                                            {type.type.name.charAt(0).toUpperCase() + type.type.name.slice(1)}
+                                        </span>
+                                        {typeIndex < pokemon.types.length - 1 && " · "}
+                                    </span>
+                                ))}
+                            </Typography>
+                        </Grid>
+                    </Box>
+                ))}
+            </Box>
+        ))}
     </Box>
-  );
+</Container>
+</Box>
+</>
+);
 }

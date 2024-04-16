@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import { Typography, Container, Box, Grid, List, ListItem, ListItemText, Divider } from "@mui/material";
+import { Typography, Container, Box, Grid, List, ListItem, ListItemText, Divider} from "@mui/material";
 import { getTypeColor } from "../pokemon/molding/elements/Elements";
 import { PokemonResponse } from "../../types/pokemon";
 
@@ -69,16 +69,16 @@ export const PokemonDetail = () => {
             <Grid item xs={12} sm={6} md={8}>
               <List>
                 <ListItem>
-                  <ListItemText style={{borderBottom: '1px solid black'}} primary={`Number: ${pokemon.id}`} />
+                  <ListItemText style={{ borderBottom: '1px solid black' }} primary={`Number: ${pokemon.id}`} />
                 </ListItem>
                 <ListItem>
-                  <ListItemText style={{borderBottom: '1px solid black'}} primary={`Description: ${pokemon.description}`} />
+                  <ListItemText style={{ borderBottom: '1px solid black' }} primary={`Description: ${pokemon.description}`} />
                 </ListItem>
                 <ListItem>
-                  <ListItemText style={{borderBottom: '1px solid black'}} primary={`Height: ${pokemon.height * 10} cm`} />
+                  <ListItemText style={{ borderBottom: '1px solid black' }} primary={`Height: ${pokemon.height * 10} cm`} />
                 </ListItem>
                 <ListItem>
-                  <ListItemText style={{borderBottom: '1px solid black'}} primary={`Weight: ${pokemon.weight / 10} kg`} />
+                  <ListItemText style={{ borderBottom: '1px solid black' }} primary={`Weight: ${pokemon.weight / 10} kg`} />
                 </ListItem>
                 <ListItem>
                   <Grid container justifyContent="space-around" mt={2} >
@@ -89,8 +89,10 @@ export const PokemonDetail = () => {
                           <ListItem key={index} disableGutters>
                             <ListItemText
                               primary={type.type.name.charAt(0).toUpperCase() + type.type.name.slice(1)}
-                              style={{ color: 'white', border: '2px solid transparent', borderRadius: '5px',
-                              backgroundColor: getTypeColor(type.type.name)}}
+                              style={{
+                                color: 'white', border: '2px solid transparent', borderRadius: '5px',
+                                backgroundColor: getTypeColor(type.type.name)
+                              }}
                             />
                           </ListItem>
                         ))}

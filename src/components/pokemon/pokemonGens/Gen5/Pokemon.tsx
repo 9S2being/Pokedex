@@ -2,11 +2,13 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { PokemonResponse } from "../../../../types/pokemon";
-import { Typography, Container, Box, Grid } from "@mui/material";
+import { Typography, Container, Box, Grid} from "@mui/material";
 import { getTypeColor } from "../../molding/elements/Elements";
 import { groupLimit } from "../../molding/group/Group";
 import { formatId } from "../../molding/id/Id";
 import { Link } from "react-router-dom";
+import { PokeNav } from "../../../header/NavPokedex";
+import { Header } from "../../../header/Header";
 
 export function PokemonList5() {
     const [pokemon, setPokemon] = useState<PokemonResponse[]>([]);
@@ -32,16 +34,15 @@ export function PokemonList5() {
         fetchPokemonList();
     }, []); 
 
-
-    // Dividi os Pokémon em grupos de 7
     const pokemonGroups = groupLimit(pokemon, 7);
 
-    //El Conteudo
     return (
         <Box style={{ backgroundColor: '#727272'}}>
+            <Header />
         <Container style={{backgroundColor: '#FFFFFFFF'}}>
+        
             <Box style={{ padding: '5px 10px ' }}>
-                
+            <PokeNav />
                 <Box mt={4} mb={4}>
                     <Typography style={{ fontSize: '30px', fontWeight: 'bold', borderBottom: '2px solid black' }}>
                         Generation 5 Pokémon
