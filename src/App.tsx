@@ -1,11 +1,14 @@
+import  RouterApp from "./routes/route"; 
+import GlobalStyle from "./style/global";
 
-import { PokemonPage } from "./pages/mainPage/PokemonMain"
-export function App() {
+function App() {
   return (
     <>
-      <PokemonPage />
-    </>
+   <GlobalStyle />
+   <RouterApp  />
+   <GlobalStyle />
+   </>
   )
 }
 
-
+export default App

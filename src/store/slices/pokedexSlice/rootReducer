@@ -1,0 +1,11 @@
+import { combineReducers } from "redux";
+
+import PokemonListReducer from "./PokedexSlice";
+import PokemonMultipleReducer from "./PokemonMultiple";
+
+const rootReducer = combineReducers({
+  pokemonList: PokemonListReducer,
+  pokemon: PokemonMultipleReducer,
+});
+
+export default rootReducer;
