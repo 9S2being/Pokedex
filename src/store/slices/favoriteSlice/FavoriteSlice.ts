@@ -1,29 +1,50 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { PokemonResponse } from "../../../types/pokemon";
+import { PokemonResponse } from '../../../types/pokemon';
 
 interface FavoriteState {
-  pokedex: PokemonResponse[];
+  favorites: PokemonResponse[];
+  favoritesId: number[]
 }
 
 const initialState: FavoriteState = {
-  pokedex: [] 
+  favorites: [],
+  favoritesId: []
 };
 
 const favoriteSlice = createSlice({
-  name: 'favorite',
+  name: 'favorites',
   initialState,
   reducers: {
-    addPokemon: (state, action: PayloadAction<PokemonResponse>) => {
-      state.pokedex.push(action.payload); 
-    },
-    removePokemon: (state, action: PayloadAction<number>) => {
-      const index = state.pokedex.findIndex(pokemon => pokemon.id === action.payload);
-      if (index !== -1) {
-        state.pokedex.splice(index, 1); 
+    addFavorite: (state, action) => {
+      const pokemonId = action.payload
+      const isFavorite = state.favoritesId.includes(pokemonId)
+
+      if(isFavorite) {
+        state.favoritesId = state.favoritesId.filter(id => id !== pokemonId)
+      } else {
+        state.favoritesId = [...state.favoritesId, pokemonId]
       }
-    }
-  }
+/*
+      state.favorites.push(action.payload);
+      localStorage.setItem('favorites', JSON.stringify(state.favorites));
+      console.log(state.favorites)
+  */
+      return state
+      
+    },
+    removeFavorite: (state, action: PayloadAction<number>) => {
+      state.favorites = state.favorites.filter(pokemon => pokemon.id !== action.payload);
+      localStorage.setItem('favorites', JSON.stringify(state.favorites));
+    },
+    initializeFavorites: (state) => {
+      const favoritesFromStorage = localStorage.getItem('favorites');
+      if (favoritesFromStorage) {
+        state.favorites = JSON.parse(favoritesFromStorage);
+      }
+    },
+  },
 });
 
-export const { addPokemon, removePokemon } = favoriteSlice.actions;
+export const { addFavorite, removeFavorite, initializeFavorites } = favoriteSlice.actions;
+
 export default favoriteSlice.reducer;

@@ -1,0 +1,12 @@
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.pokeball-animation {
+    vertical-align: middle;
+    display: inline-block;
+    line-height: 0; 
+    animation: spin 2s infinite linear;
+}
+

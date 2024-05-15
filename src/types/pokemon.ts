@@ -1,59 +1,44 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-interface PokemonType {
+export interface PokemonType {
+    type: any;
     slot: number;
-    type: {
+    types: {
         name: string;
-        url: string;
-    };
+        type?: {
+            name: string;
+            url: string;
+        }
+    }
 }
 
-interface Sprite {
-    front_default: string;
+interface Ability {
+    ability: {
+        name: string;
+        
+    }
 }
 
-interface Item {
-    name: string;
-    category: string;
-    effect: string;
-
-}
-
-interface Moves {
-    name: string;
-    pp: number;
-    power: number;
-    accuracy: number;
-}
-
-//Pokemon
 export interface PokemonResponse {
+    base_stat: any;
+   
     id: number;
     name: string;
     height: number;
     weight: number;
     types: PokemonType[];
-    sprites: Sprite;
     description: string;
-    stats: number;
+    stats: string;
+    abilities: Ability[];
+    url: string;
+    currentPokemonId: number;
+    isFavorite: boolean;
+    sprites: {
+        front_default?: string;
+    };
 }
 
-//Pokemons
-export interface PokedexDTO {
-    pokemon: PokemonResponse[];
+export interface PokemonApiResponse {
+    results: PokemonResponse[];
+    next: string | null; 
+    previous: string | null; 
 }
-
-//group
-export interface GroupLimit {
-    limit: number;
-}
-
-//Moves
-export interface MovesDTO {
-    moves: Moves[];
-}
-
-//Items
-export interface ItemDTO {
-    item: Item[];
-}
-

@@ -1,87 +1,83 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState, useEffect } from "react";
-import axios from "axios";
-import { PokemonResponse } from "../../../../types/pokemon";
-import { Typography, Container, Box, Grid } from "@mui/material";
-import { getTypeColor } from "../../molding/elements/Elements";
-import { groupLimit } from "../../molding/group/Group";
-import { formatId } from "../../molding/id/Id";
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { Typography, Grid, Container, Box } from "@mui/material";
+import { fetchPokemons } from "../../../../store/slices/pokemonSlice/PokemonSlice";
+import { useAppDispatch, useAppSelector } from "../../../../store/hooks";
+import CatchingPokemonIcon from '@mui/icons-material/CatchingPokemon';
 import { PokeNav } from "../../../header/NavPokedex";
+import { getTypeColor } from "../../molding/elements/Elements";
+import { Link } from "react-router-dom";
 import { Header } from "../../../header/Header";
+import "../../../../style/animations/style.css";
+import { groupPokemons } from "../../molding/group/Group";
+import { formatId } from "../../molding/id/Id";
 
-export function PokemonList9() {
-    const [pokemon, setPokemon] = useState<PokemonResponse[]>([]);
+export const PokemonList9 = () => {
+    const dispatch = useAppDispatch();
+    const { pokemons, status, error } = useAppSelector((state) => state.pokemon);
 
     useEffect(() => {
-        const fetchPokemonList = async () => {
-            try {
-                const startingPokemonId = 906; 
-                const offset = startingPokemonId - 1; 
-                const limit = 120; 
+        dispatch(fetchPokemons());
+    }, [dispatch]);
 
-                const response = await axios.get(`https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limit}`);
-                const pokemonList = response.data.results;
-                const pokemonUrl = pokemonList.map((pokemon: { url: string }) => pokemon.url);
-                const pokemonDataResponses = await Promise.all(pokemonUrl.map((url: string) => axios.get(url)));
-                const pokemonData = pokemonDataResponses.map(response => response.data);
-                setPokemon(pokemonData);
-            } catch (error) {
-                console.log("Erro ao carregar a lista de pokemons: ", error);
-            }
+    const generationPokemons = pokemons.filter(pokemon => pokemon.id >= 906 && pokemon.id <= 1025);
+
+    const renderPokemons = () => {
+        if (status === 'loading') {
+            return <CatchingPokemonIcon className="pokeball-animation" style={{ fontSize: 100, marginBottom: '100px', marginTop: '100px' }} />;
         }
+        if (status === 'failed') {
+            return <Typography>Error: {error}</Typography>;
+        }
+        return (
+            <>
+                {groupPokemons(generationPokemons, 8).map((group, groupIndex) => (
+                    <Grid key={groupIndex} container item justifyContent="center" spacing={2}>
+                        {group.map((pokemon: any, index: any) => (
+                            <Grid key={index} item xs={6} sm={3} md={1} style={{ margin: '0 8px' }}>
+                                <Box p={2} mt={1} display="flex" flexDirection="column" alignItems="center" justifyContent="center">
+                                    <img src={pokemon.sprites.front_default} alt={pokemon.name} style={{ height: '100px' }} />
+                                    <Typography style={{ whiteSpace: 'nowrap', fontSize: '12px', paddingBottom: '4px' }}>{formatId(pokemon.id)}</Typography>
+                                    <Typography style={{ whiteSpace: 'nowrap', fontSize: '10px' }}>{pokemon.height * 10} cm</Typography>
+                                    <Link to="#" style={{ textDecoration: 'none' }}>
+                                        <Typography style={{ whiteSpace: 'nowrap', fontSize: '16px', paddingTop: '4px' }}>{pokemon.name}</Typography>
+                                    </Link>
 
-        fetchPokemonList();
-    }, []); 
-
-    const pokemonGroups = groupLimit(pokemon, 7);
+                                    <Box style={{ display: 'flex', whiteSpace: 'nowrap', paddingTop: '5px' }}>
+                                        {pokemon.types.map((type: any, idx: any) => (
+                                            <Typography key={idx} style={{ color: getTypeColor(type.type?.name), marginRight: '5px', fontSize: '15px' }}>{type.type?.name}</Typography>
+                                        ))}
+                                    </Box>
+                                </Box>
+                            </Grid>
+                        ))}
+                    </Grid>
+                ))}
+            </>
+        );
+    };
 
     return (
-        <Box style={{ backgroundColor: '#727272'}}>
+        <Box style={{
+            backgroundColor: '#727272', border: "4px solid transparent", borderRadius: '4px',
+            backgroundImage: "repeating-linear-gradient(-45deg, #6a6a6a 0, #6a6a6a 2px, #727272 2px, #727272 11px)",
+            backgroundSize: '16px 16px',
+            minHeight: '100vh'
+        }}>
             <Header />
-        <Container style={{backgroundColor: '#FFFFFFFF'}}>
-        
-            <Box style={{ padding: '5px 10px ' }}>
-            <PokeNav />
+            <Container style={{ backgroundColor: '#FFFFFF', paddingTop: '20px', border: '1px', borderRadius: '20px' }}>
+                <PokeNav />
                 <Box mt={4} mb={4}>
                     <Typography style={{ fontSize: '30px', fontWeight: 'bold', borderBottom: '2px solid black' }}>
                         Generation 9 Pokémon
                     </Typography>
                 </Box>
 
-                {pokemonGroups.map((group, index) => (
-                    <Box key={index} display="flex" justifyContent="center" flexWrap="wrap">
-                        {group.map((pokemon: PokemonResponse, subIndex: number) => (
-                            <Box key={subIndex} m={2} textAlign="center">
-                                {pokemon.sprites && (
-                                    <img src={pokemon.sprites.front_default} alt={pokemon.name} style={{ height: "105px" }} />
-                                )}
-                                <Typography style={{ fontSize: '11px' }}>{formatId(pokemon.id)}</Typography>
-                                <Typography style={{ fontSize: '13px' }}>{pokemon.height * 10} cm</Typography>
-                                <Grid>
-                                   
-                                    <Link to={`/pokemon/${pokemon.name}`} style={{ color: '#2769be', textDecoration: 'none' }}>
-                                        {pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}
-                                    </Link>
-                                </Grid>
-                                <Grid>
-                                    <Typography>
-                                        {pokemon.types.map((type, typeIndex) => (
-                                            <span key={typeIndex}>
-                                                <span style={{ fontSize: '15px', color: getTypeColor(type.type.name.charAt(0).toUpperCase() + type.type.name.slice(1)) }}>
-                                                    {type.type.name.charAt(0).toUpperCase() + type.type.name.slice(1)}
-                                                </span>
-                                                {typeIndex < pokemon.types.length - 1 && " · "}
-                                            </span>
-                                        ))}
-                                    </Typography>
-                                </Grid>
-                            </Box>
-                        ))}
-                    </Box>
-                ))}
-            </Box>
-        </Container>
+                <Grid container justifyContent="center">
+                    {renderPokemons()}
+                </Grid>
+            </Container>
         </Box>
     );
-}
+};
+
