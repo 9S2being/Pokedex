@@ -1,20 +1,17 @@
-import { Box, Button, Grid, Paper} from '@mui/material';
-import { Logo } from './logo/logo';
-import { Link } from 'react-router-dom';
+import { Box, /*Button, Grid, Paper */ } from '@mui/material';
+import { Logo } from './logo';
+/*import { Link } from 'react-router-dom';*/
 
 export function Header() {
     return (
-        <Box display="flex" flexDirection="column" alignItems="center">
+        <Box display="flex" flexDirection="column" alignItems="center" mb={4}>
             <Logo />
-            <Box width="80vw" mb={3} borderRadius={2}>
-                <Paper sx={{ backgroundColor: '#303030', border: '1px solid transparent', borderRadius: '16px', padding: '17px' }}>
-                    <Grid container spacing={4} alignItems="center" justifyContent="center">
+           {/* <Box width="40vw" mb={3} borderRadius={2} >
+                <Paper sx={{ backgroundColor: '#303030', border: '1px solid transparent', borderRadius: '50px', padding: '10px' }}>
+                     <Grid container spacing={4} alignItems="center" justifyContent="center">
                         {[
-                            { label: 'National Dex', path: '/PokedexGen1' },
-                            { label: 'Items', path: '/Items' },
-                            { label: 'Favorites', path: '/favorites' },
-                            { label: 'Moves', path: '/moves' },
-                            { label: 'Berrys', path: '/berrys' },
+                            { label: 'Pokedex', path: '/PokedexGen1' },
+
                         ].map(({ label, path }, index) => (
                             <Grid item key={index}>
                                 <Button
@@ -28,9 +25,9 @@ export function Header() {
                                 </Button>
                             </Grid>
                         ))}
-                    </Grid>
+                    </Grid> 
                 </Paper>
-            </Box>
+            </Box> */} 
         </Box>
     );
 }

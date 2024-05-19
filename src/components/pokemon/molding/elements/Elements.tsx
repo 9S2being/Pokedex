@@ -21,7 +21,7 @@ export const getTypeColor = (type: string) => {
       case "flying":
           return "#A890FD";
       case "psychic":
-          return "#F9C054";
+          return "#A20EA2";
       case "bug":
           return "#A6B91A";
       case "rock":
