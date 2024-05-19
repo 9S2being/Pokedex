@@ -1,6 +1,6 @@
 # Pokédex 
 
-Uma aplicação Pokédex construída com React, Redux, TypeScript e Vite, que lista todos os Pokémon até a geração 9 e utiliza a [PokeApi V2]([https://pokeapi.co/](https://pokeapi.co/docs/v2)).
+Uma aplicação Pokédex construída com React, Redux, TypeScript e Vite, que lista todos os Pokémon até a geração 9 e utiliza a [PokeApi V2](https://pokeapi.co/docs/v2).
 ## Índice
 
 - [Descrição](#descrição)
