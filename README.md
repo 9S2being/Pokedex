@@ -22,5 +22,17 @@ Este projeto é uma Pokédex, uma aplicação web que permite aos usuários pesq
 - ESLint e Prettier (para linting e formatação de código)
 
 ## Instalação 
- 
+
+ ```sh
+# Clone o repositório
+git clone https://github.com/9S2being/Pokedex.git
+
+# Navegue até o diretório do projeto
+cd Pokedex
+
+# Instale as dependências
+npm install
+
+# Inicie a aplicação
+npm run dev
 
