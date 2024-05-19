@@ -32,6 +32,8 @@ export interface PokemonResponse {
     url: string;
     currentPokemonId: number;
     isFavorite: boolean;
+    offset: number;
+    limit: number;
     sprites: {
         front_default?: string;
     };

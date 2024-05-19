@@ -8,6 +8,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import StarIcon from '@mui/icons-material/Star';
+import CloseIcon from '@mui/icons-material/Close';
 import { PokeNav } from "../../../header/NavPokedex";
 import { getTypeColor } from "../../molding/elements/Elements";
 import { Link } from "react-router-dom";
@@ -15,7 +16,7 @@ import { Header } from "../../../header/Header";
 import { formatId } from '../../molding/id/Id';
 import { groupPokemons } from '../../molding/group/Group';
 import { PokemonResponse } from '../../../../types/pokemon';
-import { addFavorite, initializeFavorites } from '../../../../store/slices/favoriteSlice/FavoriteSlice';
+import { addFavorite, initializeFavorites, removeFavorite } from '../../../../store/slices/favoriteSlice/FavoriteSlice';
 
 export function PokemonList1() {
     const dispatch = useAppDispatch();
@@ -27,7 +28,7 @@ export function PokemonList1() {
     const [showFavorites, setShowFavorites] = useState(false);
 
     useEffect(() => {
-        dispatch(fetchPokemons());
+        dispatch(fetchPokemons({ limit: 151, offset: 0 }));
         dispatch(initializeFavorites());
     }, [dispatch]);
 
@@ -63,19 +64,26 @@ export function PokemonList1() {
     };
 
     const handleToggleFavorite = (pokemon: PokemonResponse) => {
-        const updatedFavorites: number[] = isFavorite(pokemon.id) ? 
-            Array.isArray(favorites) ? favorites.filter(id => id !== pokemon.id) : [] : 
+        const isCurrentlyFavorite = isFavorite(pokemon.id);
+        const updatedFavorites: number[] = isCurrentlyFavorite ?
+            Array.isArray(favorites) ? favorites.filter(id => id !== pokemon.id) : [] :
             Array.isArray(favorites) ? [...favorites, pokemon.id] : [pokemon.id];
-    
-        dispatch(addFavorite(pokemon.id));
-    
+
+        updatedFavorites.sort((a, b) => a - b);
+
+        if (isCurrentlyFavorite) {
+            dispatch(removeFavorite(pokemon.id));
+        } else {
+            dispatch(addFavorite(pokemon.id));
+        }
+
         localStorage.setItem('favorites', JSON.stringify(updatedFavorites));
     };
 
     useEffect(() => {
         const savedFavorites = JSON.parse(localStorage.getItem('favorites') || '[]');
         dispatch(initializeFavorites(savedFavorites));
-    }, []);
+    },);
 
     const renderPokemons = () => {
         if (status === 'loading') {
@@ -85,12 +93,13 @@ export function PokemonList1() {
             return <Typography>Error: {error}</Typography>;
         }
 
-        const pokemonsToShow = showFavorites ? getFavoritePokemons(pokemons) : pokemons;
+        let pokemonsToRender = showFavorites ? getFavoritePokemons(pokemons) : pokemons;
+        pokemonsToRender = pokemonsToRender.slice(0, 151);
 
         return (
             <>
-                {groupPokemons(pokemonsToShow, 8).map((group, groupIndex) => (
-                    <Grid key={groupIndex} container item justifyContent="center" spacing={2}>
+                {groupPokemons(pokemonsToRender, 8).map((group, groupIndex) => (
+                    <Grid key={groupIndex} container item justifyContent="center" spacing={3}>
                         {group.map((pokemon: PokemonResponse, index: number) => (
                             <Grid key={index} item xs={6} sm={3} md={1} style={{ margin: '0 8px', position: 'relative' }}>
                                 <IconButton onClick={() => handleToggleFavorite(pokemon)} style={{ position: 'absolute', top: '20%', left: '101%', transform: 'translate(-50%, -50%)', color: 'yellow', zIndex: 1 }}>
@@ -105,8 +114,9 @@ export function PokemonList1() {
                                     </Link>
                                     <Box style={{ display: 'flex', whiteSpace: 'nowrap', paddingTop: '5px' }}>
                                         {pokemon.types.map((type, idx) => (
-                                            <Typography key={idx} style={{ color: getTypeColor(type.type.name), marginRight: '5px', fontSize: '15px' }}>{type.type.name}</Typography>
-                                        ))}
+                                            <Typography key={idx} style={{ color: getTypeColor(type.type.name), marginRight: '5px', fontSize: '15px' }}>
+                                                {type.type.name.charAt(0).toUpperCase() + type.type.name.slice(1)}
+                                            </Typography>))}
                                     </Box>
                                 </Box>
                             </Grid>
@@ -130,13 +140,26 @@ export function PokemonList1() {
             <Header />
             <Container style={{ backgroundColor: '#FFFFFF', paddingTop: '20px', border: '1px', borderRadius: '20px' }}>
                 <PokeNav />
-                <Box mt={4} mb={4}>
-                    <Typography style={{ fontSize: '30px', fontWeight: 'bold', borderBottom: '2px solid black' }}>
+                <Box mt={4} mb={4} >
+                    <Typography style={{ fontSize: '30px', fontWeight: 'bold', borderBottom: '2px solid black', marginBottom: '60px', display: 'flex', alignItems: 'center' }}>
                         Generation 1 Pokémon
+                        <span style={{ marginLeft: '650px' }}>
+                            <Button
+                                variant="contained"
+                                onClick={() => setShowFavorites(!showFavorites)}
+                                style={{
+                                    background: `linear-gradient(to right, ${showFavorites ? 'black' : '#FFBF00'}, ${showFavorites ? '#FFBF00' : 'black'})`,
+                                    color: 'white',
+                                    borderRadius: '20px',
+                                    padding: '10px 20px',
+                                    fontWeight: 'bold',
+                                    marginBottom:'10px'
+                                }}
+                            >
+                                {showFavorites ? 'Show All Pokémon' : 'Show Favorites'}
+                            </Button>
+                        </span>
                     </Typography>
-                    <Button variant="contained" onClick={() => setShowFavorites(!showFavorites)} style={{ margin: '20px 0' }}>
-                        {showFavorites ? 'Show All Pokémon' : 'Show Favorites'}
-                    </Button>
                 </Box>
 
                 <Grid container justifyContent="center">
@@ -151,7 +174,8 @@ export function PokemonList1() {
                 onClose={handleCloseModal}
                 aria-labelledby="modal-title"
                 aria-describedby="modal-description"
-            >
+
+>
                 <Box
                     sx={{
                         position: 'absolute',
@@ -172,18 +196,29 @@ export function PokemonList1() {
                 >
                     {selectedPokemon && (
                         <>
-                            <Typography style={{ whiteSpace: 'nowrap', fontSize: '12px', paddingBottom: '4px', display: 'flex', alignItems: 'center' }}>
-                                <IconButton style={{ padding: '0' }} onClick={handlePreviousPokemon}>
+
+                            <section style={{ whiteSpace: 'nowrap', paddingBottom: '4px', display: 'flex', alignItems: 'center', position: 'relative' }}>
+                                <IconButton style={{ padding: '0', color: 'black' }} onClick={handlePreviousPokemon}>
                                     <ArrowBackIcon />
                                 </IconButton>
-                                <Typography style={{ whiteSpace: 'nowrap', fontSize: '16px', paddingTop: '4px', position: 'absolute', top: '10px' }}>
+                                <Typography style={{ whiteSpace: 'nowrap', fontSize: '20px', fontFamily: 'serif', fontWeight: 'bolder', padding: '4px 12px', top: '10px' }}>
                                     {selectedPokemon.name.charAt(0).toUpperCase() + selectedPokemon.name.slice(1)}
                                 </Typography>
-
-                                <IconButton style={{ padding: '0' }} onClick={handleNextPokemon}>
+                                <IconButton style={{ padding: '0', color: 'black' }} onClick={handleNextPokemon}>
                                     <ArrowForwardIcon />
                                 </IconButton>
-                            </Typography>
+                            </section>
+                            <div style={{ position: 'absolute', top: '10px', right: '10px' }}>
+                                <IconButton
+                                    style={{
+                                        padding: '0',
+                                        color: 'black',
+                                    }}
+                                    onClick={handleCloseModal}
+                                >
+                                    <CloseIcon />
+                                </IconButton>
+                            </div>
 
 
                             <Box style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '20px' }}>
@@ -205,7 +240,7 @@ export function PokemonList1() {
                                             Weight: {selectedPokemon.weight / 10} kg
                                         </Typography>
                                         <Typography>
-                                        Abilities: {selectedPokemon.abilities.map((ability) => ability.ability.name).join(', ')}
+                                            Abilities: {selectedPokemon.abilities.map((ability) => ability.ability.name).join(', ')}
                                         </Typography>
                                     </Paper>
                                 </Box>

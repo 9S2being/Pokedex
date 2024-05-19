@@ -33,8 +33,9 @@ const favoriteSlice = createSlice({
       
     },
     removeFavorite: (state, action: PayloadAction<number>) => {
-      state.favorites = state.favorites.filter(pokemon => pokemon.id !== action.payload);
-      localStorage.setItem('favorites', JSON.stringify(state.favorites));
+      const pokemonIdToRemove = action.payload;
+      state.favoritesId = state.favoritesId.filter(id => id !== pokemonIdToRemove);
+      localStorage.setItem('favorites', JSON.stringify(state.favoritesId));
     },
     initializeFavorites: (state) => {
       const favoritesFromStorage = localStorage.getItem('favorites');

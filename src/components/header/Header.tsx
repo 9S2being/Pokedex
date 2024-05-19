@@ -1,14 +1,14 @@
-import { Box, Button, Grid, Paper } from '@mui/material';
+import { Box, /*Button, Grid, Paper */ } from '@mui/material';
 import { Logo } from './logo';
-import { Link } from 'react-router-dom';
+/*import { Link } from 'react-router-dom';*/
 
 export function Header() {
     return (
         <Box display="flex" flexDirection="column" alignItems="center" mb={4}>
             <Logo />
-            <Box width="40vw" mb={3} borderRadius={2} >
+           {/* <Box width="40vw" mb={3} borderRadius={2} >
                 <Paper sx={{ backgroundColor: '#303030', border: '1px solid transparent', borderRadius: '50px', padding: '10px' }}>
-                    <Grid container spacing={4} alignItems="center" justifyContent="center">
+                     <Grid container spacing={4} alignItems="center" justifyContent="center">
                         {[
                             { label: 'Pokedex', path: '/PokedexGen1' },
 
@@ -25,9 +25,9 @@ export function Header() {
                                 </Button>
                             </Grid>
                         ))}
-                    </Grid>
+                    </Grid> 
                 </Paper>
-            </Box>
+            </Box> */} 
         </Box>
     );
 }

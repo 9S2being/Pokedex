@@ -3,11 +3,12 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { PokemonApiResponse, PokemonResponse } from "../../../types/pokemon";
 
-export const fetchPokemons = createAsyncThunk<PokemonResponse[]>(
+export const fetchPokemons = createAsyncThunk<PokemonResponse[], { limit: number, offset: number }> (
     'pokemons/fetchPokemon',
-    async (_, thunkApi) => {
+    async (pokemonPerPage, thunkApi) => {
         try {
-            const response = await axios.get<PokemonApiResponse>("https://pokeapi.co/api/v2/pokemon?limit=1025");
+            const { limit, offset } = pokemonPerPage
+            const response = await axios.get<PokemonApiResponse>(`https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`);
             const data = response.data;
             const pokemonDetailsPromises = data.results.map(async (result) => {
                 const pokemonDetailsResponse = await axios.get<PokemonResponse>(result.url);
