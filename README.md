@@ -1,30 +1,24 @@
-# React + TypeScript + Vite
+# Pokédex 
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Uma aplicação Pokédex construída com React, Redux, TypeScript e Vite, que lista todos os Pokémon até a geração 9 e utiliza a [PokeApi V2]([https://pokeapi.co/](https://pokeapi.co/docs/v2)).
+## Índice
 
-Currently, two official plugins are available:
+- [Descrição](#descrição)
+- [Tecnologias](#tecnologias)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Descrição
 
-## Expanding the ESLint configuration
+Este projeto é uma Pokédex, uma aplicação web que permite aos usuários pesquisar e visualizar informações sobre todos os Pokémon até a geração 9. A aplicação é construída com React e Redux para a interface e gerenciamento de estado, TypeScript para tipagem estática, e Vite para a construção e otimização do projeto. Utiliza a API do Pokémon V2 para obter os dados dos Pokémon e implementa paginação para facilitar a navegação.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Tecnologias
 
-- Configure the top-level `parserOptions` property like this:
+- React
+- Redux
+- TypeScript
+- Vite
+- Axios (para requisições HTTP)
+- CSS Modules (para estilização)
+- ESLint e Prettier (para linting e formatação de código)
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+
