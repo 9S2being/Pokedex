@@ -8,7 +8,7 @@ Uma aplicação Pokédex construída com React, Redux, TypeScript e Vite, que li
 
 ## Descrição
 
-Este projeto é uma Pokédex, uma aplicação web que permite aos usuários pesquisar e visualizar informações sobre todos os Pokémon até a geração 9. A aplicação é construída com React e Redux para a interface e gerenciamento de estado, TypeScript para tipagem estática, e Vite para a construção e otimização do projeto. Utiliza a API do Pokémon V2 para obter os dados dos Pokémon e implementa paginação para facilitar a navegação.
+Este projeto é uma Pokédex, uma aplicação web que permite aos usuários pesquisar e visualizar informações sobre todos os Pokémon até a geração 9. A aplicação é construída com React e Redux para a interface e gerenciamento de estado, TypeScript para tipagem estática, e Vite para a construção e otimização do projeto. Utiliza a PokeApiV2 para obter os dados dos Pokémon e implementa paginação para facilitar a navegação.
 
 ## Tecnologias
 
