@@ -18,6 +18,7 @@ Este projeto é uma Pokédex, uma aplicação web que permite aos usuários pesq
 - TypeScript
 - Vite
 - Axios (para requisições HTTP)
+- Material UI
 - CSS Modules (para estilização)
 - ESLint e Prettier (para linting e formatação de código)
 
