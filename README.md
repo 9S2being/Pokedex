@@ -5,6 +5,7 @@ Uma aplicação Pokédex construída com React, Redux, TypeScript e Vite, que li
 
 - [Descrição](#descrição)
 - [Tecnologias](#tecnologias)
+- [Instalação](#instalação)
 
 ## Descrição
 
@@ -20,5 +21,6 @@ Este projeto é uma Pokédex, uma aplicação web que permite aos usuários pesq
 - CSS Modules (para estilização)
 - ESLint e Prettier (para linting e formatação de código)
 
-
+## Instalação 
+ 
 
