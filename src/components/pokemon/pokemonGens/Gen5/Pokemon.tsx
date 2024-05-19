@@ -28,12 +28,16 @@ export function PokemonList5() {
     const [showFavorites, setShowFavorites] = useState(false);
 
     useEffect(() => {
-        dispatch(fetchPokemons({ limit: 156, offset: 498 }));
+        dispatch(fetchPokemons({  limit: 156, offset: 498 }));
         dispatch(initializeFavorites());
     }, [dispatch]);
 
     const isFavorite = (pokemonId: number) => {
         return Array.isArray(favorites) && favorites.includes(pokemonId);
+    };
+
+    const hasFavorites = () => {
+        return favorites.length > 0;
     };
 
     const getFavoritePokemons = (pokemons: PokemonResponse[]) => {
@@ -85,6 +89,14 @@ export function PokemonList5() {
         dispatch(initializeFavorites(savedFavorites));
     },);
 
+    const renderNoFavoritesMessage = () => {
+        return (
+            <Typography variant="h6" style={{ textAlign: 'center', height: '150px' }}>
+               <strong> No favorite yet</strong>
+            </Typography>
+        );
+    };
+
     const renderPokemons = () => {
         if (status === 'loading') {
             return <CatchingPokemonIcon className="pokeball-animation" style={{ fontSize: 100, marginBottom: '100px', marginTop: '100px' }} />;
@@ -92,6 +104,7 @@ export function PokemonList5() {
         if (status === 'failed') {
             return <Typography>Error: {error}</Typography>;
         }
+
 
         let pokemonsToRender = showFavorites ? getFavoritePokemons(pokemons) : pokemons;
         pokemonsToRender = pokemonsToRender.slice(0, 151);
@@ -153,13 +166,15 @@ export function PokemonList5() {
                                     borderRadius: '20px',
                                     padding: '10px 20px',
                                     fontWeight: 'bold',
-                                    marginBottom:'10px'
+                                    marginBottom: '10px'
                                 }}
                             >
-                                {showFavorites ? 'Show All Pokémon' : 'Show Favorites'}
+                                {showFavorites ? 'Show All Pokémon' : 'Show Favorites'}                   
                             </Button>
                         </span>
                     </Typography>
+                    {showFavorites && !hasFavorites() && renderNoFavoritesMessage()}                   
+
                 </Box>
 
                 <Grid container justifyContent="center">
@@ -174,6 +189,7 @@ export function PokemonList5() {
                 onClose={handleCloseModal}
                 aria-labelledby="modal-title"
                 aria-describedby="modal-description"
+
             >
                 <Box
                     sx={{
