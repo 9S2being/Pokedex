@@ -28,7 +28,7 @@ export function PokemonList5() {
     const [showFavorites, setShowFavorites] = useState(false);
 
     useEffect(() => {
-        dispatch(fetchPokemons({  limit: 156, offset: 498 }));
+        dispatch(fetchPokemons({  limit: 156, offset: 497 }));
         dispatch(initializeFavorites());
     }, [dispatch]);
 
