@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from 'react';
-import { Typography, Grid, Container, Box, Modal, List, ListItemText, ListItem, CardMedia, Paper, IconButton, Button } from "@mui/material";
+import { Typography, Grid, Container, Box, Modal, List, ListItemText, ListItem, CardMedia, Paper, IconButton, Button, useTheme } from "@mui/material";
 import { fetchPokemons } from "../../../../store/slices/pokemonSlice/PokemonSlice";
 import { useAppDispatch, useAppSelector } from "../../../../store/hooks";
 import CatchingPokemonIcon from '@mui/icons-material/CatchingPokemon';
@@ -28,7 +28,7 @@ export function PokemonList4() {
     const [showFavorites, setShowFavorites] = useState(false);
 
     useEffect(() => {
-        dispatch(fetchPokemons({  limit: 107, offset: 386 }));
+        dispatch(fetchPokemons({ limit: 107, offset: 386 }));
         dispatch(initializeFavorites());
     }, [dispatch]);
 
@@ -81,18 +81,31 @@ export function PokemonList4() {
             dispatch(addFavorite(pokemon.id));
         }
 
-        localStorage.setItem('favorites', JSON.stringify(updatedFavorites));
     };
 
     useEffect(() => {
-        const savedFavorites = JSON.parse(localStorage.getItem('favorites') || '[]');
-        dispatch(initializeFavorites(savedFavorites));
-    },);
+        try {
+            localStorage.setItem('favorites', JSON.stringify(favorites));
+        } catch (error) {
+            console.error('Falha ao tentar salvar um favorito:', error);
+        }
+    }, [favorites]);
+
+    const isLargerScreen = useTheme().breakpoints.up('md');
+
+    useEffect(() => {
+        try {
+            const savedFavorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+            dispatch(initializeFavorites(savedFavorites));
+        } catch (error) {
+            console.error('Falha ao tentar salvar um favorito', error);
+        }
+    }, [dispatch]);
 
     const renderNoFavoritesMessage = () => {
         return (
             <Typography variant="h6" style={{ textAlign: 'center', height: '150px' }}>
-               <strong> No favorite yet</strong>
+                <strong> No favorite yet</strong>
             </Typography>
         );
     };
@@ -105,17 +118,16 @@ export function PokemonList4() {
             return <Typography>Error: {error}</Typography>;
         }
 
-
         let pokemonsToRender = showFavorites ? getFavoritePokemons(pokemons) : pokemons;
         pokemonsToRender = pokemonsToRender.slice(0, 151);
 
         return (
             <>
                 {groupPokemons(pokemonsToRender, 8).map((group, groupIndex) => (
-                    <Grid key={groupIndex} container item justifyContent="center" spacing={3}>
+                    <Grid key={groupIndex} container item justifyContent="center" spacing={2}>
                         {group.map((pokemon: PokemonResponse, index: number) => (
-                            <Grid key={index} item xs={6} sm={3} md={1} style={{ margin: '0 8px', position: 'relative' }}>
-                                <IconButton onClick={() => handleToggleFavorite(pokemon)} style={{ position: 'absolute', top: '20%', left: '101%', transform: 'translate(-50%, -50%)', color: 'yellow', zIndex: 1 }}>
+                            <Grid key={index} item xs={6} sm={3} md={2} lg={1} style={{ margin: '0 8px', position: 'relative' }}>
+                                <IconButton onClick={() => handleToggleFavorite(pokemon)} style={{ position: 'absolute', top: '20%', left: '90%', transform: 'translate(-50%, -50%)', color: 'yellow', zIndex: 1 }}>
                                     {isFavorite(pokemon.id) ? <StarIcon /> : <StarBorderIcon />}
                                 </IconButton>
                                 <Box p={2} mt={1} display="flex" flexDirection="column" alignItems="center" justifyContent="center">
@@ -127,7 +139,7 @@ export function PokemonList4() {
                                     </Link>
                                     <Box style={{ display: 'flex', whiteSpace: 'nowrap', paddingTop: '5px' }}>
                                         {pokemon.types.map((type, idx) => (
-                                            <Typography key={idx} style={{ color: getTypeColor(type.type.name), marginRight: '5px', fontSize: '15px' }}>
+                                            <Typography key={idx} style={{ color: getTypeColor(type.type.name), marginRight: '5px', fontSize: '12px' }}>
                                                 {type.type.name.charAt(0).toUpperCase() + type.type.name.slice(1)}
                                             </Typography>))}
                                     </Box>
@@ -154,27 +166,24 @@ export function PokemonList4() {
             <Container style={{ backgroundColor: '#FFFFFF', paddingTop: '20px', border: '1px', borderRadius: '20px' }}>
                 <PokeNav />
                 <Box mt={4} mb={4} >
-                    <Typography style={{ fontSize: '30px', fontWeight: 'bold', borderBottom: '2px solid black', marginBottom: '60px', display: 'flex', alignItems: 'center' }}>
+                    <Typography style={{ fontSize: '24px', fontWeight: 'bold', borderBottom: '2px solid black', marginBottom: '40px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                         Generation 4 Pokémon
-                        <span style={{ marginLeft: '650px' }}>
-                            <Button
-                                variant="contained"
-                                onClick={() => setShowFavorites(!showFavorites)}
-                                style={{
-                                    background: `linear-gradient(to right, ${showFavorites ? 'black' : '#FFBF00'}, ${showFavorites ? '#FFBF00' : 'black'})`,
-                                    color: 'white',
-                                    borderRadius: '20px',
-                                    padding: '10px 20px',
-                                    fontWeight: 'bold',
-                                    marginBottom: '10px'
-                                }}
-                            >
-                                {showFavorites ? 'Show All Pokémon' : 'Show Favorites'}                   
-                            </Button>
-                        </span>
+                        <Button
+                            variant="contained"
+                            onClick={() => setShowFavorites(!showFavorites)}
+                            style={{
+                                background: `linear-gradient(to right, ${showFavorites ? 'black' : '#FFBF00'}, ${showFavorites ? '#FFBF00' : 'black'})`,
+                                color: 'white',
+                                borderRadius: '20px',
+                                padding: '10px 20px',
+                                fontWeight: 'bold',
+                                marginBottom: '10px'
+                            }}
+                        >
+                            {showFavorites ? 'Show All Pokémon' : 'Show Favorites'}
+                        </Button>
                     </Typography>
-                    {showFavorites && !hasFavorites() && renderNoFavoritesMessage()}                   
-
+                    {showFavorites && !hasFavorites() && renderNoFavoritesMessage()}
                 </Box>
 
                 <Grid container justifyContent="center">
@@ -182,14 +191,12 @@ export function PokemonList4() {
                 </Grid>
             </Container>
 
-
             {/* Modal */}
             <Modal
                 open={openModal}
                 onClose={handleCloseModal}
                 aria-labelledby="modal-title"
                 aria-describedby="modal-description"
-
             >
                 <Box
                     sx={{
@@ -197,31 +204,40 @@ export function PokemonList4() {
                         top: '50%',
                         left: '50%',
                         transform: 'translate(-50%, -50%)',
-                        width: 600,
-                        maxWidth: '90%',
+                        width: { xs: '90vw', md: '65vw' },
+                        height: { xs: 'auto', md: '66vh' },
+                        maxWidth: '100%',
+                        maxHeight: '100%',
                         boxShadow: 24,
                         p: 4,
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
-                        backgroundImage: 'linear-gradient(143deg, red 50%, white 50%)',
+                        backgroundImage: 'linear-gradient(red 50%, white 50%)',
                         borderRadius: '24px',
                         border: '3px solid black',
+                        overflow: 'auto'
                     }}
                 >
                     {selectedPokemon && (
                         <>
-
                             <section style={{ whiteSpace: 'nowrap', paddingBottom: '4px', display: 'flex', alignItems: 'center', position: 'relative' }}>
-                                <IconButton style={{ padding: '0', color: 'black' }} onClick={handlePreviousPokemon}>
-                                    <ArrowBackIcon />
-                                </IconButton>
-                                <Typography style={{ whiteSpace: 'nowrap', fontSize: '20px', fontFamily: 'serif', fontWeight: 'bolder', padding: '4px 12px', top: '10px' }}>
+                                <Typography style={{
+                                    whiteSpace: 'nowrap',
+
+                                    fontSize: isLargerScreen ? '20px' : '16px',
+                                    fontFamily: 'serif',
+                                    fontWeight: 'bolder',
+                                    padding: '4px 12px',
+                                    top: '10px',
+                                    border: '1px solid black',
+                                    borderRadius: '10px',
+                                    backgroundColor: 'white',
+                                    
+                                }}>
+
                                     {selectedPokemon.name.charAt(0).toUpperCase() + selectedPokemon.name.slice(1)}
                                 </Typography>
-                                <IconButton style={{ padding: '0', color: 'black' }} onClick={handleNextPokemon}>
-                                    <ArrowForwardIcon />
-                                </IconButton>
                             </section>
                             <div style={{ position: 'absolute', top: '10px', right: '10px' }}>
                                 <IconButton
@@ -235,48 +251,55 @@ export function PokemonList4() {
                                 </IconButton>
                             </div>
 
-
                             <Box style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '20px' }}>
-                                <Box style={{ flex: '1', marginRight: '20px' }}>
-                                    <Paper style={{ padding: '16px', border: '2px solid black', borderRadius: '20px', marginBottom: '20px' }}>
-                                        <CardMedia
-                                            component="img"
-                                            height="200px"
-                                            image={selectedPokemon.sprites.front_default}
-                                            alt={selectedPokemon.name}
-                                        />
-                                    </Paper>
+                                <section style={{ whiteSpace: 'nowrap', paddingBottom: '4px', display: 'flex', alignItems: 'center', position: 'relative' }}>
+                                    <IconButton style={{ padding: '0', color: 'black', fontSize: '2rem', marginRight: '20px' }} onClick={handlePreviousPokemon}>
+                                        <ArrowBackIcon style={{ fontSize: '2.5rem' }} />
+                                    </IconButton>
+                                    <Box style={{ flex: '1', marginRight: '20px' }}>
+                                        <Paper style={{ padding: '16px', border: '2px solid black', borderRadius: '20px', marginBottom: '20px' }}>
+                                            <CardMedia
+                                                component="img"
+                                                height="200px"
+                                                image={selectedPokemon.sprites.front_default}
+                                                alt={selectedPokemon.name}
+                                            />
+                                        </Paper>
 
-                                    <Paper style={{ backgroundColor: '#f5f5f5', padding: '16px', borderRadius: '20px' }}>
-                                        <Typography>
-                                            Height: {selectedPokemon.height * 10} cm
-                                        </Typography>
-                                        <Typography>
-                                            Weight: {selectedPokemon.weight / 10} kg
-                                        </Typography>
-                                        <Typography>
-                                            Abilities: {selectedPokemon.abilities.map((ability) => ability.ability.name).join(', ')}
-                                        </Typography>
-                                    </Paper>
-                                </Box>
+                                        <Paper style={{ backgroundColor: '#f5f5f5', padding: '16px', borderRadius: '20px' }}>
+                                            <Typography>
+                                                Height: {selectedPokemon.height * 10} cm
+                                            </Typography>
+                                            <Typography>
+                                                Weight: {selectedPokemon.weight / 10} kg
+                                            </Typography>
+                                            <Typography>
+                                                Abilities: {selectedPokemon.abilities.map((ability) => ability.ability.name).join(', ')}
+                                            </Typography>
+                                        </Paper>
+                                    </Box>
 
-                                <Box style={{ flex: '1' }}>
-                                    <Paper style={{ backgroundColor: '#f5f5f5', padding: '16px', borderRadius: '20px', marginBottom: '20px' }}>
-                                        <Typography variant="h6" style={{ marginBottom: '8px' }}>Stats:</Typography>
-                                        <List>
-                                            {Array.isArray(selectedPokemon.stats) && selectedPokemon.stats.map((stat: any, index: any) => (
-                                                <ListItem key={index}>
-                                                    <ListItemText primary={`${stat.stat.name}: ${stat.base_stat}`} />
-                                                </ListItem>
-                                            ))}
-                                        </List>
-                                    </Paper>
-                                </Box>
+                                    <Box style={{ flex: '1' }}>
+                                        <Paper style={{ backgroundColor: '#f5f5f5', padding: '16px', borderRadius: '20px', marginBottom: '20px' }}>
+                                            <Typography variant="h6" style={{ marginBottom: '8px', marginLeft: '60px' }}>Stats:</Typography>
+                                            <List>
+                                                {Array.isArray(selectedPokemon.stats) && selectedPokemon.stats.map((stat, index) => (
+                                                    <ListItem key={index}>
+                                                        <ListItemText primary={`${stat.stat.name.charAt(0).toUpperCase() + stat.stat.name.slice(1)}: ${stat.base_stat}`} />
+                                                    </ListItem>
+                                                ))}
+                                            </List>
+                                        </Paper>
+                                    </Box>
+                                    <IconButton style={{ padding: '0', color: 'black', fontSize: '2rem', marginLeft: '20px' }} onClick={handleNextPokemon}>
+                                        <ArrowForwardIcon style={{ fontSize: '2.5rem' }} />
+                                    </IconButton>
+                                </section>
                             </Box>
                         </>
                     )}
                 </Box>
             </Modal>
-        </Box>
+        </Box >
     );
 }
